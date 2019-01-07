@@ -1,0 +1,10 @@
+{
+  "all_users" : {
+    "description" : "Returns all users.",
+    "query" : "SELECT * FROM users"
+  },
+  "get_name" : {
+    "description" : "Returns the first and last name of all users.",
+    "query" : "SELECT u.firstName, u.lastName FROM users AS u"
+  }
+}
