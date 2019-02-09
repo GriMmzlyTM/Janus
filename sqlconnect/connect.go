@@ -3,46 +3,55 @@ package janussql
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/fatih/color"
 	_ "github.com/go-sql-driver/mysql"
-	"gopkg.in/abiosoft/ishell.v2"
+	ishell "gopkg.in/abiosoft/ishell.v2"
 )
 
 type DatabaseObject struct {
-	Driver 			string
-	Host 			string
-	User 			string
-	Password 		string
-	Dbname 			string
-	MasterString	string
+	Driver       string
+	Host         string
+	User         string
+	Password     string
+	Dbname       string
+	MasterString string
 }
 
 func Connect(conn DatabaseObject) (*sql.DB, error) {
 
 	dbTemp, err := connectDatabase(conn)
 
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 
 	pingErr := dbTemp.Ping()
-	if pingErr != nil { return nil, pingErr }
+	if pingErr != nil {
+		return nil, pingErr
+	}
 
 	return dbTemp, nil
 
 }
 
-func PingDb(c*ishell.Context, db *sql.DB) error {
+func PingDb(c *ishell.Context, db *sql.DB) error {
 
-	if db == nil { return fmt.Errorf("Database not initialized or set. Please connect first.") }
+	if db == nil {
+		return fmt.Errorf("Database not initialized or set. Please connect first.")
+	}
 
 	err := db.Ping()
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 
 	c.Println(color.BlueString("Ping successful! You're connected to the database!"))
 
 	return nil
 }
 
-func connectDatabase (dbObj DatabaseObject) (*sql.DB, error) {
+func connectDatabase(dbObj DatabaseObject) (*sql.DB, error) {
 
 	var dataSource string
 

@@ -16,23 +16,25 @@ package cmd
 
 import (
 	"Janus/shell"
-	"Janus/sqlconnect"
+	janussql "Janus/sqlconnect"
 	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
-var dbDriver 	string
-var dbUser 		string
-var dbPass 		string
-var dbName		string
-var dbHost		string
-var dbString	string
+var dbDriver string
+var dbUser string
+var dbPass string
+var dbName string
+var dbHost string
+var dbString string
 
 type pet struct {
-	name string
-	owner string
+	name    string
+	owner   string
 	species string
 }
+
 // connectCmd represents the connect command
 var connectCmd = &cobra.Command{
 	Use:   "connect",
@@ -41,12 +43,12 @@ var connectCmd = &cobra.Command{
 or provide a master string (--to) as well as the driver. Type Janus connect --help for more info.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		conn := janussql.DatabaseObject{
-			Driver: 	dbDriver,
-			Host: 		dbHost,
-			User: 		dbUser,
-			Password: 	dbPass,
-			Dbname: 	dbName,
-			MasterString: 	dbString}
+			Driver:       dbDriver,
+			Host:         dbHost,
+			User:         dbUser,
+			Password:     dbPass,
+			Dbname:       dbName,
+			MasterString: dbString}
 		dbTemp, err := janussql.Connect(conn)
 		if err != nil {
 			fmt.Println("COULD NOT CONNECT TO DATABASE. " + err.Error())
@@ -66,8 +68,8 @@ func init() {
 	connectCmd.Flags().StringVarP(&dbPass, "password", "p", "", "Database password to use when connecting")
 	connectCmd.Flags().StringVarP(&dbName, "database", "D", "", "Database to connect to")
 	connectCmd.Flags().StringVarP(&dbHost, "host", "H", "", "host to connect to")
-	connectCmd.Flags().StringVarP(&dbString, "to", "t", "", "Full database string to use for connection. formatted " +
-																					"<database_username>:<database_password>@tcp(<database_ip>)/<database_name>")
+	connectCmd.Flags().StringVarP(&dbString, "to", "t", "", "Full database string to use for connection. formatted "+
+		"<database_username>:<database_password>@tcp(<database_ip>)/<database_name>")
 	connectCmd.MarkFlagRequired("driver")
 
 	rootCmd.AddCommand(connectCmd)

@@ -17,12 +17,13 @@ package shell
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/fatih/color"
 	"io/ioutil"
 	"os"
 	"strings"
 
-	"gopkg.in/abiosoft/ishell.v2"
+	"github.com/fatih/color"
+
+	ishell "gopkg.in/abiosoft/ishell.v2"
 )
 
 var file = "queries.json"
@@ -50,7 +51,9 @@ func Query(c *ishell.Context) {
 
 	queryMap := checkQuery(c, query)
 
-	if queryMap == nil { return }
+	if queryMap == nil {
+		return
+	}
 
 	c.Println(color.GreenString("\nEXECUTING QUERY..."))
 
@@ -64,11 +67,13 @@ func Query(c *ishell.Context) {
 	data := make([]map[string]string, 0)
 
 	processErr := processRows(rows, &data, c)
-	if processErr != nil { return }
+	if processErr != nil {
+		return
+	}
 
 	for i, _ := range data {
 		for key, val := range data[i] {
-			c.Printf(color.MagentaString("%s ") + "-" + color.BlueString( " %s") + " | ", key, val)
+			c.Printf(color.MagentaString("%s ")+"-"+color.BlueString(" %s")+" | ", key, val)
 		}
 		c.Println("")
 	}
@@ -82,17 +87,18 @@ func QueryInterval(c *ishell.Context) {
 
 	queryMap := checkQuery(c, query)
 
-	if queryMap == nil { return }
-
-
-
+	if queryMap == nil {
+		return
+	}
 
 }
 
 func checkQuery(c *ishell.Context, query string) map[string]map[string]string {
 
 	queryMap := ParseJson(file, c)
-	if queryMap == nil { return nil}
+	if queryMap == nil {
+		return nil
+	}
 
 	if _, ok := queryMap[query]; !ok {
 		c.Printf(color.RedString("\n%s does not exist in json map!\n"), query)
@@ -144,7 +150,9 @@ func processRows(rows *sql.Rows, data *[]map[string]string, c *ishell.Context) e
 
 func ListQueries(c *ishell.Context) {
 	queryMap := ParseJson(file, c)
-	if queryMap == nil {return}
+	if queryMap == nil {
+		return
+	}
 
 	c.Println(color.GreenString("\nAVAILABLE QUERIES: "))
 	for key, val := range queryMap {
@@ -193,4 +201,3 @@ func ParseJson(openFile string, c *ishell.Context) map[string]map[string]string 
 	}
 	return queryMap
 }
-
